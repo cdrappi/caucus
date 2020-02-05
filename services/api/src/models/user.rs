@@ -1,20 +1,17 @@
 use auth::jwt::{decode_jwt, JsonWebToken};
 use bcrypt::{hash, verify, DEFAULT_COST};
-use chrono::{NaiveDateTime, Utc};
 use diesel::prelude::PgConnection;
 use diesel::query_dsl::filter_dsl::FilterDsl;
 use diesel::result::Error;
 use diesel::ExpressionMethods;
 use diesel::RunQueryDsl;
-use protos;
 use schema::users;
-use util;
 
 #[derive(Queryable, Debug, Serialize, Deserialize)]
 pub struct User {
     pub id: i32,
     pub is_admin: bool,
-    pub username: Option<String>,
+    pub username: String,
     pub password_hash: String,
 }
 
@@ -23,7 +20,7 @@ impl User {
         format!("{}", self.id)
     }
 
-    pub fn get_from_id(id: i32, conn: &PgConnection) -> Result<User, Error> {
+    pub fn _get_from_id(id: i32, conn: &PgConnection) -> Result<User, Error> {
         return users::dsl::users
             .filter(users::dsl::id.eq(id))
             .get_result::<User>(conn);
@@ -43,7 +40,6 @@ impl User {
         username: &String,
         password: &String,
     ) -> Result<usize, Error> {
-        let now = Utc::now().naive_utc();
         let new_user = (
             users::dsl::is_admin.eq(false),
             users::dsl::username.eq(username),
@@ -71,13 +67,13 @@ impl User {
                 }
             }
             Err(_) => {
-                User::create_from_email_password(conn, email, password)?;
-                User::get_from_email(conn, email)
+                User::create_from_username_password(conn, username, password)?;
+                User::get_from_username(conn, username)
             }
         }
     }
 
-    pub fn set_username(
+    pub fn _set_username(
         conn: &PgConnection,
         user_id: &i32,
         username: &String,
@@ -104,7 +100,7 @@ impl User {
             .expect("bcrypt::verify returned an error")
     }
 
-    pub fn set_password_hash(
+    pub fn _set_password_hash(
         conn: &PgConnection,
         user_id: &i32,
         password_hash: &String,

@@ -1,14 +1,8 @@
 use auth::jwt::JsonWebToken;
-use bytes::BytesMut;
-use db::DbConn;
-use forms::user::{UpdateEmail, UpdatePassword, UpdateUsername};
 use log;
 use models::user::User;
-use prost::Message;
 use rocket::Route;
-use rocket_contrib::json::Json;
 use util::JsonResponse;
-use util::ProtobufResponse;
 
 pub fn get_user_routes() -> Vec<Route> {
     routes![whose_token_json,]

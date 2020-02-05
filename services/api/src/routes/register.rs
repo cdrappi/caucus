@@ -1,11 +1,8 @@
 use auth::jwt::create_jwt;
-use auth::twilio;
 use db::DbConn;
 use forms::register::RegisterUsername;
-use forms::twilio::{SubmitPhone, VerifyPhone};
 use log;
 use models::user::User;
-use reqwest::StatusCode;
 use rocket::{http::Status, Route};
 use rocket_contrib::json::Json;
 use util::JsonResponse;
@@ -23,8 +20,8 @@ fn register_with_username(
     return match User::get_from_username(&conn, &body.username) {
         Ok(_) => {
             log::warn!(
-                "Tried to create a user with an email that already exists: {}",
-                &body.email
+                "Tried to create a user with a username that already exists: {}",
+                &body.username
             );
             JsonResponse {
                 status: Status::UnprocessableEntity,
@@ -33,14 +30,17 @@ fn register_with_username(
         }
         Err(_) => {
             // Error is actually good here!
-            let user_result = User::get_or_create_from_email(
-                &body.email,
-                &body.password,
+            let user_result = User::get_or_create_from_username(
                 &conn,
+                &body.username,
+                &body.password,
             );
             return match user_result {
                 Ok(user) => {
-                    log::info!("Created a user from email {}", &body.email);
+                    log::info!(
+                        "Created a user from username {}",
+                        &body.username
+                    );
                     JsonResponse::ok(
                         json!({"success": true, "jwt": &create_jwt(user.id)}),
                     )
@@ -48,11 +48,11 @@ fn register_with_username(
                 Err(r) => {
                     log::error!(
                         "Error creating a user with email {}",
-                        &body.email
+                        &body.username
                     );
                     JsonResponse::err500(json!({
                         "success": false,
-                        "error": format!("Error get/creating user with email/password: {:}", r)
+                        "error": format!("Error get/creating user with username/password: {:}", r)
                     }))
                 }
             };

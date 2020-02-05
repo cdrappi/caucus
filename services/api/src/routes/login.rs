@@ -19,7 +19,7 @@ fn login_with_username(
     conn: DbConn,
     body: Json<UsernameLogin>,
 ) -> JsonResponse {
-    let user_result = User::get_from_username(&body.username, &conn);
+    let user_result = User::get_from_username(&conn, &body.username);
     login_user_result(user_result, "username", &body.username, &body.password)
 }
 
