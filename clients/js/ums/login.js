@@ -16,16 +16,9 @@ function validateLoginInputs(loginType, login, password) {
     }
 }
 
-function fetchLogin(loginType, jsonBody) {
-    return postAuthJson(`${API_HOST}/ums/login/${loginType}/`, jsonBody)
+function fetchLogin(username, password) {
+    return postAuthJson(`${API_HOST}/ums/login`, { username: username, password: password })
 }
 
-function fetchLoginWith(loginType, login, password, bookId = 1) {
-    return fetchLogin(loginType, {
-        [loginType]: login,
-        password: password,
-        book_id: bookId
-    })
-}
 
-export { validateLoginInputs, fetchLoginWith };
+export { fetchLogin };

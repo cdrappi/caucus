@@ -1,5 +1,4 @@
 <script>
-  import API_HOST from "../api_config.js";
   import {
     getToken,
     deleteToken,
@@ -15,21 +14,24 @@
     fetchCreateUser,
     fetchCsrfToken,
     validateInputs
-  } from "../../../";
+  } from "../../../clients/js/ums";
 
   export let isLoggedIn;
+
   let id, username, email;
   let wantsToSignUp = false;
   let usernameInput = "";
   let passwordInput = "";
   let isMessageError = false;
   let message = "";
+
   if (getToken()) {
     // if we have a token saved to local storage,
     // then log them in automatically
     fetchUserData_().then(fetchCsrfToken_());
     // Also get a new CSRF token always
   }
+
   function setUserData(json) {
     id = json.id;
     username = json.username;
@@ -38,6 +40,7 @@
     isMessageError = false;
     message = "Logged in as " + username;
   }
+
   function clearUserData() {
     id = null;
     username = null;
@@ -46,6 +49,7 @@
     isMessageError = false;
     message = "Logged out";
   }
+
   async function fetchUserData_() {
     let token = getToken();
     if (token) {
@@ -71,6 +75,7 @@
       console.log("cannot get username because we have no token");
     }
   }
+
   function logOut() {
     deleteToken();
     deleteCsrfToken();
@@ -95,6 +100,7 @@
         });
     }
   }
+
   function fetchCsrfToken_() {
     let token = getToken();
     if (token && !getCsrfToken()) {
@@ -113,9 +119,11 @@
         });
     }
   }
+
   function logIn() {
     fetchAuthToken_().then(fetchCsrfToken_());
   }
+
   function signUp() {
     if (validateInputs(usernameInput, passwordInput)) {
       fetchCreateUser(usernameInput, passwordInput)

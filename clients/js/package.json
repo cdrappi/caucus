@@ -1,0 +1,8 @@
+{
+    "name": "caucus-client",
+    "dependencies": {
+        "@babel/runtime": "^7.7.6"
+    },
+    "devDependencies": {},
+    "private": true
+}
