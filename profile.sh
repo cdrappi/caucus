@@ -1,4 +1,4 @@
-export PROJECT_ALIAS="rnr"
+export PROJECT_ALIAS="caucus"
 
 alias cdf="${PROJECT_ALIAS}; cd apps/web";
 alias cdb="${PROJECT_ALIAS}; cd services/api";
