@@ -19,6 +19,14 @@ table! {
 }
 
 table! {
+    precinct_captains (id) {
+        id -> Int4,
+        user_id -> Nullable<Int4>,
+        precinct -> Nullable<Varchar>,
+    }
+}
+
+table! {
     precinct_votes (id) {
         id -> Int4,
         candidate -> Varchar,
@@ -47,6 +55,8 @@ table! {
 }
 
 joinable!(counties -> caucus (state_code));
+joinable!(precinct_captains -> precincts (precinct));
+joinable!(precinct_captains -> users (user_id));
 joinable!(precinct_votes -> candidates (candidate));
 joinable!(precinct_votes -> precincts (precinct));
 joinable!(precincts -> counties (county_id));
@@ -55,6 +65,7 @@ allow_tables_to_appear_in_same_query!(
     candidates,
     caucus,
     counties,
+    precinct_captains,
     precinct_votes,
     precincts,
     users,
