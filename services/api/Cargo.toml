@@ -1,5 +1,5 @@
 [package]
-name = "rnr"
+name = "caucus"
 version = "0.0.1"
 publish = false
 license = "Apache"
