@@ -1,0 +1,8 @@
+# Config file
+env.yaml
+
+# Mac files
+.DS_Store
+
+# Editors
+.vscode

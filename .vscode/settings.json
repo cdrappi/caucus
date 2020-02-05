@@ -1,0 +1,29 @@
+{
+  "files.autoSaveDelay": 10000,
+  "editor.codeActionsOnSaveTimeout": 10000,
+  "editor.formatOnSaveTimeout": 10000,
+  "editor.formatOnSave": true,
+  "rust-client.enableMultiProjectSetup": true,
+  "rust-client.channel": "nightly",
+  "cSpell.words": [
+    "bcrypt",
+    "chrono",
+    "decodable",
+    "encodable",
+    "ionicons",
+    "jsonwebtoken",
+    "prost",
+    "protobuf",
+    "protos",
+    "queryable",
+    "reqwest",
+    "rustc",
+    "serialize",
+    "twilio",
+    "varchar"
+  ],
+  "python.pythonPath": "${workspaceFolder}/../venvs/rnr/bin/python",
+  "python.formatting.provider": "autopep8",
+  "python.formatting.autopep8Args": ["--max-line-length", "79"],
+  "python.linting.pylintArgs": ["--load-plugins"]
+}

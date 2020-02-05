@@ -1,0 +1,44 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels: 
+        app: backend
+    spec:
+      containers: 
+      - name: backend
+        image: gcr.io/{GCP_PROJECT_NAME}/{IMAGE_REPO_NAME}:{IMAGE_NAME}
+        ports:
+        - containerPort: {CONTAINER_PORT}
+        readinessProbe:
+          httpGet:
+            path: /
+            port: {CONTAINER_PORT}
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: creds-volume
+          mountPath: /etc/creds
+          readOnly: true
+        env:
+        - name: DATABASE_URL
+          value: "{DATABASE_URL}"
+        - name: RUST_BACKTRACE
+          value: "{RUST_BACKTRACE}"
+        - name: ROCKET_PORT
+          value: "{ROCKET_PORT}"
+        - name: ROCKET_ADDRESS
+          value: "{ROCKET_ADDRESS}"
+        - name: ROCKET_SECRET_KEY
+          value: "{ROCKET_SECRET_KEY}"
+        - name: ROCKET_DATABASES
+          value: "{postgres_database={url={DATABASE_URL}}}"
+
+      volumes:
+          - name: creds-volume
+            secret:
+              secretName: gcp-creds

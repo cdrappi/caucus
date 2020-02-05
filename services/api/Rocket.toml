@@ -1,0 +1,9 @@
+[global]
+
+[global.databases.postgres]
+
+[production]
+workers = 1
+keep_alive = 5
+log = "critical"
+limits = { forms = 8192 }
