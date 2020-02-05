@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS precinct_votes;
+DROP TABLE IF EXISTS precincts;
+DROP TABLE IF EXISTS counties;
+DROP TABLE IF EXISTS caucus;
+DROP TABLE IF EXISTS candidates;
