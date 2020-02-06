@@ -19,7 +19,7 @@ fn get_precinct(
     jwt: JsonWebToken,
     conn: DbConn,
     org: String,
-    precinct: i32,
+    precinct: String,
 ) -> JsonResponse {
     let user_id = User::get_id_from_token(&jwt);
     log::info!(
@@ -28,9 +28,16 @@ fn get_precinct(
         org,
         precinct
     );
-    JsonResponse::ok(
-        json!({ "success": true, "data": {"precinct": precinct} }),
-    )
+    match PrecinctVote::get_votes(&conn, &precinct) {
+        Ok(precinct_votes) => JsonResponse::ok(json!({
+            "success": true,
+            "data": precinct_votes
+        })),
+        Err(e) => JsonResponse::err500(json!({
+            "success": false,
+            "error": format!("{:?}", e)
+        })),
+    }
 }
 
 /// Update precinct if user is precinct captain or admin

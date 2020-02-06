@@ -1,6 +1,8 @@
 /// Precinct voting tallies
 use diesel::prelude::PgConnection;
 use diesel::result::Error;
+use diesel::ExpressionMethods;
+use diesel::QueryDsl;
 use diesel::RunQueryDsl;
 use forms::precinct_vote::NewPrecinctVote;
 use schema::precinct_votes;
@@ -29,5 +31,14 @@ impl PrecinctVote {
             .do_update()
             .set(new_precinct_vote)
             .get_result(conn)
+    }
+
+    pub fn get_votes(
+        conn: &PgConnection,
+        precinct: &String,
+    ) -> Result<Vec<PrecinctVote>, Error> {
+        return precinct_votes::dsl::precinct_votes
+            .filter(precinct_votes::dsl::precinct.eq(precinct))
+            .get_results::<PrecinctVote>(conn);
     }
 }
