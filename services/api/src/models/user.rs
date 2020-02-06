@@ -5,6 +5,8 @@ use diesel::query_dsl::filter_dsl::FilterDsl;
 use diesel::result::Error;
 use diesel::ExpressionMethods;
 use diesel::RunQueryDsl;
+use models::org_admin::OrgAdmin;
+use models::precinct_admin::PrecinctAdmin;
 use schema::users;
 
 #[derive(Queryable, Debug, Serialize, Deserialize)]
@@ -18,11 +20,27 @@ pub struct User {
 impl User {
     /// Can this user edit the votes of this org for this precinct?
     pub fn can_edit_votes(
-        user_id: i32,
+        conn: &PgConnection,
+        id: i32,
         org: &String,
         precinct: &String,
     ) -> bool {
-        true
+        if User::is_admin(&conn, id) {
+            return true;
+        } else if OrgAdmin::is_org_admin(conn, id, org) {
+            return true;
+        } else if PrecinctAdmin::is_precinct_admin(conn, id, org, precinct) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    pub fn is_admin(conn: &PgConnection, id: i32) -> bool {
+        return match User::get_from_id(conn, id) {
+            Ok(user) => user.is_admin,
+            Err(_) => false,
+        };
     }
 
     pub fn to_string(&self) -> String {

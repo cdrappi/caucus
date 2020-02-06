@@ -1,7 +1,6 @@
 /// Organization Admins
 use diesel::dsl::count_star;
 use diesel::prelude::PgConnection;
-use diesel::result::Error;
 use diesel::ExpressionMethods;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
@@ -15,18 +14,20 @@ pub struct OrgAdmin {
 }
 
 impl OrgAdmin {
+    /// See if this user is admin for this org
     pub fn is_org_admin(
         conn: &PgConnection,
         user_id: i32,
         org: &String,
     ) -> bool {
-        let org_admin_count_result = org_admins::dsl::org_admins
-            .filter(org_admins::dsl::org.eq(org))
-            .filter(org_admins::dsl::user_id.eq(user_id))
+        let org_admin_count_result = org_admins::table
             .select(count_star())
-            .limit(1)
-            .get_result(conn);
-        let org_admin_count: i32 = org_admin_count_result.expect("Err");
-        return org_admin_count > 0;
+            .filter(org_admins::dsl::user_id.eq(user_id))
+            .filter(org_admins::dsl::org.eq(org))
+            .first::<i64>(conn);
+        return match org_admin_count_result {
+            Ok(org_admin_count) => org_admin_count > 0,
+            Err(_) => false,
+        };
     }
 }

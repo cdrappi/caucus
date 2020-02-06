@@ -56,7 +56,7 @@ table! {
         slug -> Varchar,
         county_id -> Varchar,
         state_delegates -> Int4,
-        attendence -> Nullable<Int4>,
+        turnout -> Nullable<Int4>,
     }
 }
 

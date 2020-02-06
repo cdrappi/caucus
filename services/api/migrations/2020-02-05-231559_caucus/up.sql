@@ -22,7 +22,7 @@ CREATE TABLE precincts (
     county_id varchar(32) REFERENCES counties(slug) NOT NULL,
     state_delegates INT DEFAULT 0 NOT NULL,
     -- nullables:
-    attendence INT -- null before results are in
+    turnout INT -- null before results are in
 );
 
 CREATE TABLE precinct_votes (
