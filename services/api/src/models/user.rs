@@ -20,7 +20,7 @@ impl User {
         format!("{}", self.id)
     }
 
-    pub fn _get_from_id(id: i32, conn: &PgConnection) -> Result<User, Error> {
+    pub fn get_from_id(conn: &PgConnection, id: i32) -> Result<User, Error> {
         return users::dsl::users
             .filter(users::dsl::id.eq(id))
             .get_result::<User>(conn);
@@ -82,6 +82,18 @@ impl User {
             users::dsl::users.filter(users::dsl::id.eq(user_id)),
         )
         .set(users::dsl::username.eq(username))
+        .execute(conn);
+    }
+
+    pub fn set_admin(
+        conn: &PgConnection,
+        user_id: i32,
+        is_admin: bool,
+    ) -> Result<usize, Error> {
+        return diesel::update(
+            users::dsl::users.filter(users::dsl::id.eq(user_id)),
+        )
+        .set(users::dsl::is_admin.eq(is_admin))
         .execute(conn);
     }
 

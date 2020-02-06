@@ -9,7 +9,7 @@ use rocket::Route;
 use rocket_contrib::json::Json;
 use util::JsonResponse;
 
-pub fn get_login_routes() -> Vec<Route> {
+pub fn get_routes() -> Vec<Route> {
     routes![login_with_username,]
 }
 

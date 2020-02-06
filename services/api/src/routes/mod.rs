@@ -1,4 +1,5 @@
 pub mod login;
+pub mod precincts;
 pub mod register;
 pub mod user;
 
@@ -12,8 +13,9 @@ fn index(_conn: DbConn) -> String {
 
 pub fn get_routes() -> Vec<Route> {
     let mut route_vec = routes![index];
-    route_vec.extend(register::get_register_routes().iter().cloned());
-    route_vec.extend(login::get_login_routes().iter().cloned());
-    route_vec.extend(user::get_user_routes().iter().cloned());
+    route_vec.extend(register::get_routes().iter().cloned());
+    route_vec.extend(login::get_routes().iter().cloned());
+    route_vec.extend(user::get_routes().iter().cloned());
+    route_vec.extend(precincts::get_routes().iter().cloned());
     route_vec
 }
