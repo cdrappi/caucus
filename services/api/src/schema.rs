@@ -19,10 +19,25 @@ table! {
 }
 
 table! {
-    precinct_captains (id) {
+    org_admins (id) {
         id -> Int4,
-        user_id -> Nullable<Int4>,
-        precinct -> Nullable<Varchar>,
+        user_id -> Int4,
+        org -> Varchar,
+    }
+}
+
+table! {
+    orgs (slug) {
+        slug -> Varchar,
+    }
+}
+
+table! {
+    precinct_admins (id) {
+        id -> Int4,
+        user_id -> Int4,
+        org -> Varchar,
+        precinct -> Varchar,
     }
 }
 
@@ -55,8 +70,11 @@ table! {
 }
 
 joinable!(counties -> caucus (state_code));
-joinable!(precinct_captains -> precincts (precinct));
-joinable!(precinct_captains -> users (user_id));
+joinable!(org_admins -> orgs (org));
+joinable!(org_admins -> users (user_id));
+joinable!(precinct_admins -> orgs (org));
+joinable!(precinct_admins -> precincts (precinct));
+joinable!(precinct_admins -> users (user_id));
 joinable!(precinct_votes -> candidates (candidate));
 joinable!(precinct_votes -> precincts (precinct));
 joinable!(precincts -> counties (county_id));
@@ -65,7 +83,9 @@ allow_tables_to_appear_in_same_query!(
     candidates,
     caucus,
     counties,
-    precinct_captains,
+    org_admins,
+    orgs,
+    precinct_admins,
     precinct_votes,
     precincts,
     users,

@@ -1,3 +1,7 @@
+CREATE TABLE orgs (
+    slug varchar(32) PRIMARY KEY
+);
+
 CREATE TABLE candidates (
     slug varchar(32) PRIMARY KEY
 );
