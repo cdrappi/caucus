@@ -1,6 +1,5 @@
 use auth::jwt::JsonWebToken;
 use log;
-use models::precinct_captain::PrecinctCaptain;
 use models::user::User;
 use rocket::Route;
 use util::JsonResponse;
@@ -10,25 +9,44 @@ pub fn get_routes() -> Vec<Route> {
 }
 
 /// Decode JsonWebToken and return user's ID as JSON
-#[get("/caucus/precincts/<precinct_id>", format = "application/json")]
-fn get_precinct(jwt: JsonWebToken, precinct_id: i32) -> JsonResponse {
+#[get("/caucus/orgs/<org>/precincts/<precinct>", format = "application/json")]
+fn get_precinct(
+    jwt: JsonWebToken,
+    org: String,
+    precinct: i32,
+) -> JsonResponse {
     let user_id = User::get_id_from_token(&jwt);
-    log::info!("User {} pinged /caucus/precincts/{}", user_id, precinct_id);
-    JsonResponse::ok(json!({ "success": true, "data": {"id": precinct_id} }))
+    log::info!(
+        "User {} pinged /caucus/orgs/{}/precincts/{}",
+        user_id,
+        org,
+        precinct
+    );
+    JsonResponse::ok(
+        json!({ "success": true, "data": {"precinct": precinct} }),
+    )
 }
 
 /// Update precinct if user is precinct captain or admin
-#[post("/caucus/precincts/<precinct_id>/update", format = "application/json")]
-fn update_precinct(jwt: JsonWebToken, precinct_id: i32) -> JsonResponse {
+#[post(
+    "/caucus/orgs/<org>/precincts/<precinct>/update",
+    format = "application/json"
+)]
+fn update_precinct(
+    jwt: JsonWebToken,
+    org: String,
+    precinct: String,
+) -> JsonResponse {
     let user_id = User::get_id_from_token(&jwt);
     log::info!(
-        "User {} pinged /caucus/precincts/{}/update",
+        "User {} pinged /caucus/orgs/{}/precincts/{}/update",
         user_id,
-        precinct_id
+        org,
+        precinct
     );
-    match PrecinctCaptain::can_edit_precinct(user_id, precinct_id) {
+    match User::can_edit_votes(user_id, &org, &precinct) {
         true => {
-            // apply edits
+            // TODO: apply edits
             JsonResponse::ok(json!({ "success": true }))
         }
         false => JsonResponse::err400(json!({

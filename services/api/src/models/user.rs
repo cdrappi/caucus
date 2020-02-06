@@ -16,6 +16,15 @@ pub struct User {
 }
 
 impl User {
+    /// Can this user edit the votes of this org for this precinct?
+    pub fn can_edit_votes(
+        user_id: i32,
+        org: &String,
+        precinct: &String,
+    ) -> bool {
+        true
+    }
+
     pub fn to_string(&self) -> String {
         format!("{}", self.id)
     }

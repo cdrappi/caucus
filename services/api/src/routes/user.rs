@@ -30,12 +30,16 @@ fn make_user_admin(
         Ok(user) => match user.is_admin {
             true => match User::get_from_username(&conn, &username) {
                 Ok(new_admin) => {
-                    User::set_admin(&conn, new_admin.id, true);
-                    JsonResponse::ok(json!({"success": true }))
+                    match User::set_admin(&conn, new_admin.id, true) {
+                        Ok(_) => JsonResponse::ok(json!({"success": true })),
+                        Err(_) => {
+                            JsonResponse::err500(json!({"success": false }))
+                        }
+                    }
                 }
                 Err(_) => JsonResponse::err400(json!({
-                        "success": false,
-                        "error": "cannot get user with that username"
+                    "success": false,
+                    "error": "cannot get user with that username"
                 })),
             },
             false => JsonResponse::err400(json!({
