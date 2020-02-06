@@ -1,5 +1,5 @@
-# rnr
-A template for easily deploying React Native + Rust apps to GKE using [donkey](https://www.github.com/cdrappi/donkey) as a git submodule
+# caucus
+App for organizing and deploying caucus strategy
 
 ## Updating git submodules
 ```sh
@@ -7,7 +7,7 @@ $ git submodule update --init
 ```
 
 # Tech stack
-`rnr` is divided into 3 folders:
+`caucus` is divided into 3 folders:
 
 - donkey (for deploys)
 - clients (e.g. a mobile app)

@@ -1,9 +1,12 @@
-export PROJECT_ALIAS="rnr"
+export PROJECT_ALIAS="caucus"
 
-alias cdm="${PROJECT_ALIAS}; cd apps/mobile";
+source ${CAUCUS_PATH}/clients/python/venv/bin/activate;
+
+alias cdf="${PROJECT_ALIAS}; cd apps/web";
 alias cdb="${PROJECT_ALIAS}; cd services/api";
+alias cdp="${PROJECT_ALIAS}; cd clients/python";
 
-alias sm="${PROJECT_ALIAS}; cd apps/mobile; expo start --ios";
-alias sb="${PROJECT_ALIAS}; cd services/api; cargo run";
+alias sf="cdf; npm run dev";
+alias sb="cdb; cargo run";
 alias fenv="cdb; source flush_env.sh";
 

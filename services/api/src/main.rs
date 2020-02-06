@@ -10,12 +10,9 @@ extern crate serde_derive;
 #[macro_use]
 extern crate rocket_contrib;
 extern crate bcrypt;
-extern crate bytes;
 extern crate chrono;
 extern crate jsonwebtoken;
 extern crate log;
-extern crate prost;
-extern crate prost_types;
 extern crate reqwest;
 extern crate rustc_serialize;
 
@@ -23,7 +20,6 @@ mod auth;
 mod db;
 mod forms;
 mod models;
-mod protos;
 mod routes;
 mod schema;
 mod util;

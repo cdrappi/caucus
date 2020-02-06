@@ -1,7 +1,7 @@
 use auth::jwt::token_ok;
 use db::DbConn;
 use diesel::result::Error;
-use forms::login::{EmailLogin, PhoneLogin, UsernameLogin};
+use forms::login::UsernameLogin;
 use log;
 use models::user::User;
 use rocket::http::Status;
@@ -10,21 +10,7 @@ use rocket_contrib::json::Json;
 use util::JsonResponse;
 
 pub fn get_login_routes() -> Vec<Route> {
-    routes![login_with_phone, login_with_email, login_with_username,]
-}
-
-/// Login using phone number and password
-#[post("/login/phone", format = "application/json", data = "<body>")]
-fn login_with_phone(conn: DbConn, body: Json<PhoneLogin>) -> JsonResponse {
-    let user_result = User::get_from_phone(&body.phone, &conn);
-    login_user_result(user_result, "phone", &body.phone, &body.password)
-}
-
-/// Login using email address and password
-#[post("/login/email", format = "application/json", data = "<body>")]
-fn login_with_email(conn: DbConn, body: Json<EmailLogin>) -> JsonResponse {
-    let user_result = User::get_from_email(&body.email, &conn);
-    login_user_result(user_result, "email", &body.email, &body.password)
+    routes![login_with_username,]
 }
 
 /// Login with usernane and password
@@ -33,7 +19,7 @@ fn login_with_username(
     conn: DbConn,
     body: Json<UsernameLogin>,
 ) -> JsonResponse {
-    let user_result = User::get_from_username(&body.username, &conn);
+    let user_result = User::get_from_username(&conn, &body.username);
     login_user_result(user_result, "username", &body.username, &body.password)
 }
 
