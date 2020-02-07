@@ -1,9 +1,9 @@
 CREATE TABLE orgs (
-    slug varchar(32) PRIMARY KEY
+    org varchar(32) PRIMARY KEY
 );
 
 CREATE TABLE candidates (
-    slug varchar(32) PRIMARY KEY
+    candidate varchar(32) PRIMARY KEY
 );
 
 CREATE TABLE caucus (
@@ -12,23 +12,41 @@ CREATE TABLE caucus (
 );
 
 CREATE TABLE counties (
-    slug varchar(32) PRIMARY KEY,
+    county varchar(32) PRIMARY KEY,
     state_code varchar(2) REFERENCES caucus(state_code) NOT NULL
     -- nullables:
 );
 
 CREATE TABLE precincts (
     slug varchar(32) PRIMARY KEY,
-    county_id varchar(32) REFERENCES counties(slug) NOT NULL,
-    state_delegates INT DEFAULT 0 NOT NULL,
+    county varchar(32) REFERENCES counties(county) NOT NULL,
+    delegates INT DEFAULT 0 NOT NULL,
     -- nullables:
     turnout INT -- null before results are in
 );
 
 CREATE TABLE precinct_votes (
     id SERIAL PRIMARY KEY,
-    candidate varchar(32) REFERENCES candidates(slug) NOT NULL,
-    precinct varchar(32) references precincts(slug) NOT NULL,
+    -- trace of where it came from
+    edit_trail_id references precinct_edit_trails(id) NOT NULL,
+    -- details
+    org varchar(32) references orgs(org) NOT NULL,
+    candidate varchar(32) REFERENCES candidates(candidate) NOT NULL,
+    precinct varchar(32) references precincts(precinct) NOT NULL,
+    -- actual data
     alignment INT NOT NULL,
-    human_votes INT NOT NULL
+    human_votes INT NOT NULL,
+    -- unique constraint
+    UNIQUE(org, candidate, precinct) -- each org can overwrite each other
+);
+
+
+CREATE TABLE precinct_edit_trails (
+    id SERIAL PRIMARY KEY,
+    user_id INT references users(id) NOT NULL,
+    org varchar(32) references orgs(org) NOT NULL,
+    candidate varchar(32) REFERENCES candidates(candidate) NOT NULL,
+    precinct varchar(32) references precincts(precinct) NOT NULL,
+    alignment INT NOT NULL,
+    human_votes INT NOT NULL,
 );
