@@ -10,12 +10,38 @@ use rocket_contrib::json::Json;
 use util::JsonResponse;
 
 pub fn get_routes() -> Vec<Route> {
-    routes![get_precinct, update_precinct_votes, update_precinct_turnout]
+    routes![
+        get_county_precincts,
+        get_precinct_votes,
+        update_precinct_votes,
+        update_precinct_turnout
+    ]
+}
+
+/// Decode JsonWebToken and return user's ID as JSON
+#[get("/caucus/counties/<county>/precincts", format = "application/json")]
+fn get_county_precincts(
+    jwt: JsonWebToken,
+    conn: DbConn,
+    county: String,
+) -> JsonResponse {
+    let user_id = User::get_id_from_token(&jwt);
+    log::info!("User {} pinged /caucus/precincts", user_id,);
+    match Precinct::get_county_precincts(&conn, &county) {
+        Ok(precincts) => JsonResponse::ok(json!({
+            "success": true,
+            "data": precincts
+        })),
+        Err(e) => JsonResponse::err500(json!({
+            "success": false,
+            "error": format!("{:?}", e)
+        })),
+    }
 }
 
 /// Decode JsonWebToken and return user's ID as JSON
 #[get("/caucus/orgs/<org>/precincts/<precinct>", format = "application/json")]
-fn get_precinct(
+fn get_precinct_votes(
     jwt: JsonWebToken,
     conn: DbConn,
     org: String,

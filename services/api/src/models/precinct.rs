@@ -16,6 +16,16 @@ pub struct Precinct {
 }
 
 impl Precinct {
+    pub fn get_county_precincts(
+        conn: &PgConnection,
+        county_id: &String,
+    ) -> Result<Vec<Precinct>, Error> {
+        return precincts::dsl::precincts
+            .filter(precincts::dsl::county_id.eq(county_id))
+            .get_results::<Precinct>(conn);
+    }
+
+    /// edit the turnout value
     pub fn set_turnout(
         conn: &PgConnection,
         precinct_slug: &String,
