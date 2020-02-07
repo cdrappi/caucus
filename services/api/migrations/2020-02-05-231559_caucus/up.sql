@@ -18,18 +18,28 @@ CREATE TABLE counties (
 );
 
 CREATE TABLE precincts (
-    slug varchar(32) PRIMARY KEY,
+    precinct varchar(32) PRIMARY KEY,
     county varchar(32) REFERENCES counties(county) NOT NULL,
-    delegates INT DEFAULT 0 NOT NULL,
-    -- nullables:
-    turnout INT -- null before results are in
+    delegates INT DEFAULT 0 NOT NULL
+);
+
+CREATE TABLE precinct_turnouts (
+    id SERIAL PRIMARY KEY,
+    -- where it came from
+    edit_trail_id references precinct_turnout_edit_trails(id) NOT NULL,
+    -- unique on
+    org varchar(32) NOT NULL,
+    precinct varchar(32) NOT NULL,
+    -- the data
+    turnout INT, -- null before results are in
+    UNIQUE(org, precinct)
 );
 
 CREATE TABLE precinct_votes (
     id SERIAL PRIMARY KEY,
     -- trace of where it came from
-    edit_trail_id references precinct_edit_trails(id) NOT NULL,
-    -- details
+    edit_trail_id references precinct_vote_edit_trails(id) NOT NULL,
+    -- unique on
     org varchar(32) references orgs(org) NOT NULL,
     candidate varchar(32) REFERENCES candidates(candidate) NOT NULL,
     precinct varchar(32) references precincts(precinct) NOT NULL,
@@ -41,7 +51,7 @@ CREATE TABLE precinct_votes (
 );
 
 
-CREATE TABLE precinct_edit_trails (
+CREATE TABLE precinct_vote_edit_trails (
     id SERIAL PRIMARY KEY,
     user_id INT references users(id) NOT NULL,
     org varchar(32) references orgs(org) NOT NULL,
