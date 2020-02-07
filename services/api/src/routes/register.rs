@@ -7,7 +7,7 @@ use rocket::{http::Status, Route};
 use rocket_contrib::json::Json;
 use util::JsonResponse;
 
-pub fn get_register_routes() -> Vec<Route> {
+pub fn get_routes() -> Vec<Route> {
     routes![register_with_username,]
 }
 

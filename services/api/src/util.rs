@@ -30,7 +30,7 @@ impl JsonResponse {
         }
     }
 
-    pub fn _err400(json: JsonValue) -> Self {
+    pub fn err400(json: JsonValue) -> Self {
         JsonResponse {
             status: Status::BadRequest,
             json: json,
