@@ -21,4 +21,4 @@ function fetchLogin(username, password) {
 }
 
 
-export { fetchLogin };
+export { fetchLogin, validateLoginInputs };
