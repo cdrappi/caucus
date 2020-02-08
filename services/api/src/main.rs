@@ -32,15 +32,15 @@ use routes::get_routes;
 
 fn main() -> Result<(), Error> {
     let allowed_origins =
-        AllowedOrigins::some_exact(&["http://127.0.0.1:8000"]);
+        AllowedOrigins::some_exact(&["http://localhost:8080"]);
     // You can also deserialize this
     let cors = rocket_cors::CorsOptions {
         allowed_origins,
-        allowed_methods: vec![Method::Get]
+        allowed_methods: vec![Method::Get, Method::Post]
             .into_iter()
             .map(From::from)
             .collect(),
-        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
+        allowed_headers: AllowedHeaders::All,
         allow_credentials: true,
         ..Default::default()
     }

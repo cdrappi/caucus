@@ -4,13 +4,13 @@
     fetchLogin
   } from "../../../../clients/js/ums/login";
 
+  import { setToken } from "../util/auth";
+
   export let isLoggedIn;
 
   let username = "";
   let password = "";
   let message = "Login to the caucus app";
-
-  $: console.log(password);
 
   function onClick() {
     let validation = validateLoginInputs(username, password);
