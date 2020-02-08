@@ -1,5 +1,5 @@
 # caucus
-App for organizing and deploying caucus strategy
+App for reporting caucus results
 
 ## Updating git submodules
 ```sh
@@ -9,15 +9,15 @@ $ git submodule update --init
 # Tech stack
 `caucus` is divided into 3 folders:
 
-- donkey (for deploys)
-- clients (e.g. a mobile app)
-- services (e.g. a web server)
+- donkey (a tool for deploys)
+- clients (e.g. the web app)
+- services (e.g. the web server)
 
 
 ## Deploy
-To deploy the service named `backend`, run:
+To deploy the service named `api`, run:
 ```sh
-$ deploy backend
+$ deploy api
 ```
 
 To deploy all services, run:
@@ -26,22 +26,13 @@ $ deploy
 ```
 
 ## Clients
-This app gives you two clients:
-
-### Mobile
-- [React Native](https://facebook.github.io/react-native/)
-- [expo](https://github.com/expo/expo)
-
-### Web
+This app gives you a web client:
 - [Svelte 3](https://svelte.dev/)
 - [webpack](https://webpack.js.org/)
 
 
 ## Services
-
 This app gives you a Rust server:
-
-### Backend
 - [Rust (nightly)](https://doc.rust-lang.org/1.2.0/book/nightly-rust.html)
 - [Rocket](https://rocket.rs/)
 - [diesel](http://diesel.rs/)
