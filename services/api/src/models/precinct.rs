@@ -12,7 +12,6 @@ pub struct Precinct {
     pub precinct: String,
     pub county: String,
     pub delegates: i32,
-    pub turnout: Option<i32>,
 }
 
 impl Precinct {
@@ -23,19 +22,5 @@ impl Precinct {
         return precincts::dsl::precincts
             .filter(precincts::dsl::county.eq(county))
             .get_results::<Precinct>(conn);
-    }
-
-    /// edit the turnout value
-    pub fn set_turnout(
-        conn: &PgConnection,
-        precinct: &String,
-        turnout: i32,
-    ) -> Result<Precinct, Error> {
-        return diesel::update(
-            precincts::dsl::precincts
-                .filter(precincts::dsl::precinct.eq(precinct)),
-        )
-        .set(precincts::dsl::turnout.eq(turnout))
-        .get_result::<Precinct>(conn);
     }
 }

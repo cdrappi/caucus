@@ -3,6 +3,7 @@ use db::DbConn;
 use forms::precinct_vote::NewPrecinctVote;
 use log;
 use models::precinct::Precinct;
+use models::precinct_turnout::PrecinctTurnout;
 use models::precinct_vote::PrecinctVote;
 use models::user::User;
 use rocket::Route;
@@ -89,7 +90,7 @@ fn update_precinct_turnout(
     match User::can_edit_votes(&conn, user_id, &org, &precinct) {
         true => {
             // TODO: apply edits
-            match Precinct::set_turnout(&conn, &precinct, turnout) {
+            match PrecinctTurnout::set_turnout(&conn, &precinct, turnout) {
                 Ok(_) => JsonResponse::ok(json!({ "success": true })),
                 Err(e) => JsonResponse::err500(
                     json!({ "success": false, "error": format!("{:?}", e) }),

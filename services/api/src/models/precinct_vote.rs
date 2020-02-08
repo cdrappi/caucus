@@ -20,7 +20,7 @@ pub struct PrecinctVote {
 }
 
 #[derive(Queryable, Debug, Serialize, Deserialize)]
-pub struct PrecinctEditTrail {
+pub struct PrecinctVoteEditTrail {
     pub id: i32,
     pub user_id: i32,
     pub org: String,
