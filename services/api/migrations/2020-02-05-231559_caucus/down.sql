@@ -1,4 +1,7 @@
+DROP TABLE IF EXISTS precinct_vote_edit_trails;
+DROP TABLE IF EXISTS precinct_turnout_edit_trails;
 DROP TABLE IF EXISTS precinct_votes;
+DROP TABLE IF EXISTS precinct_turnouts;
 DROP TABLE IF EXISTS precincts;
 DROP TABLE IF EXISTS counties;
 DROP TABLE IF EXISTS caucus;

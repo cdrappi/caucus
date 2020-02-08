@@ -30,5 +30,6 @@
   ],
   "python.linting.pylintArgs": [
     "--load-plugins"
-  ]
+  ],
+  "git.ignoreLimitWarning": true
 }

@@ -4,5 +4,8 @@ CREATE TABLE users (
     is_admin boolean DEFAULT false NOT NULL,
     username varchar(15) UNIQUE NOT NULL,
     -- and a password, which we hash with bcrypt
-    password_hash varchar(64) NOT NULL
+    password_hash varchar(64) NOT NULL,
+    -- metadata
+    created_at timestamp NOT NULL,
+    last_login timestamp NOT NULL
 );

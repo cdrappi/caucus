@@ -1,5 +1,6 @@
 use auth::jwt::{decode_jwt, JsonWebToken};
 use bcrypt::{hash, verify, DEFAULT_COST};
+use chrono::NaiveDateTime;
 use diesel::prelude::PgConnection;
 use diesel::query_dsl::filter_dsl::FilterDsl;
 use diesel::result::Error;
@@ -15,6 +16,8 @@ pub struct User {
     pub is_admin: bool,
     pub username: String,
     pub password_hash: String,
+    pub created_at: NaiveDateTime,
+    pub last_login: NaiveDateTime,
 }
 
 impl User {

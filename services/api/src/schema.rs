@@ -1,6 +1,6 @@
 table! {
-    candidates (slug) {
-        slug -> Varchar,
+    candidates (candidate) {
+        candidate -> Varchar,
     }
 }
 
@@ -12,8 +12,8 @@ table! {
 }
 
 table! {
-    counties (slug) {
-        slug -> Varchar,
+    counties (county) {
+        county -> Varchar,
         state_code -> Varchar,
     }
 }
@@ -27,8 +27,8 @@ table! {
 }
 
 table! {
-    orgs (slug) {
-        slug -> Varchar,
+    orgs (org) {
+        org -> Varchar,
     }
 }
 
@@ -42,8 +42,30 @@ table! {
 }
 
 table! {
-    precinct_votes (id) {
+    precinct_turnout_edit_trails (id) {
         id -> Int4,
+        user_id -> Int4,
+        org -> Varchar,
+        precinct -> Varchar,
+        turnout -> Int4,
+    }
+}
+
+table! {
+    precinct_turnouts (id) {
+        id -> Int4,
+        edit_trail_id -> Int4,
+        org -> Varchar,
+        precinct -> Varchar,
+        turnout -> Int4,
+    }
+}
+
+table! {
+    precinct_vote_edit_trails (id) {
+        id -> Int4,
+        user_id -> Int4,
+        org -> Varchar,
         candidate -> Varchar,
         precinct -> Varchar,
         alignment -> Int4,
@@ -52,11 +74,22 @@ table! {
 }
 
 table! {
-    precincts (slug) {
-        slug -> Varchar,
-        county_id -> Varchar,
-        state_delegates -> Int4,
-        turnout -> Nullable<Int4>,
+    precinct_votes (id) {
+        id -> Int4,
+        edit_trail_id -> Int4,
+        org -> Varchar,
+        candidate -> Varchar,
+        precinct -> Varchar,
+        alignment -> Int4,
+        human_votes -> Int4,
+    }
+}
+
+table! {
+    precincts (precinct) {
+        precinct -> Varchar,
+        county -> Varchar,
+        delegates -> Int4,
     }
 }
 
@@ -66,6 +99,8 @@ table! {
         is_admin -> Bool,
         username -> Varchar,
         password_hash -> Varchar,
+        created_at -> Timestamp,
+        last_login -> Timestamp,
     }
 }
 
@@ -75,9 +110,17 @@ joinable!(org_admins -> users (user_id));
 joinable!(precinct_admins -> orgs (org));
 joinable!(precinct_admins -> precincts (precinct));
 joinable!(precinct_admins -> users (user_id));
+joinable!(precinct_turnout_edit_trails -> users (user_id));
+joinable!(precinct_turnouts -> precinct_turnout_edit_trails (edit_trail_id));
+joinable!(precinct_vote_edit_trails -> candidates (candidate));
+joinable!(precinct_vote_edit_trails -> orgs (org));
+joinable!(precinct_vote_edit_trails -> precincts (precinct));
+joinable!(precinct_vote_edit_trails -> users (user_id));
 joinable!(precinct_votes -> candidates (candidate));
+joinable!(precinct_votes -> orgs (org));
+joinable!(precinct_votes -> precinct_vote_edit_trails (edit_trail_id));
 joinable!(precinct_votes -> precincts (precinct));
-joinable!(precincts -> counties (county_id));
+joinable!(precincts -> counties (county));
 
 allow_tables_to_appear_in_same_query!(
     candidates,
@@ -86,6 +129,9 @@ allow_tables_to_appear_in_same_query!(
     org_admins,
     orgs,
     precinct_admins,
+    precinct_turnout_edit_trails,
+    precinct_turnouts,
+    precinct_vote_edit_trails,
     precinct_votes,
     precincts,
     users,
