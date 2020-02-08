@@ -4,8 +4,10 @@
     fetchLogin
   } from "../../../../clients/js/ums/login";
 
-  export let isLoggedIn, username, password;
+  export let isLoggedIn;
 
+  let username = "";
+  let password = "";
   let message = "Login to the caucus app";
 
   function onClick() {
@@ -28,7 +30,6 @@
 </script>
 
 <div>
-  <h3>LOGIN</h3>
   <p>{message}</p>
   <div>
     <input bind:value={username} placeholder="username" />
