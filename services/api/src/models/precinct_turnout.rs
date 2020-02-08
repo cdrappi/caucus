@@ -4,7 +4,6 @@ use diesel::result::Error;
 use schema::precinct_turnout_edit_trails;
 use schema::precinct_turnouts;
 
-use diesel::query_dsl::filter_dsl::FilterDsl;
 use diesel::ExpressionMethods;
 use diesel::RunQueryDsl;
 

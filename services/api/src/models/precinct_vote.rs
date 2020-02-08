@@ -36,17 +36,7 @@ impl PrecinctVote {
         user_id: i32,
         vote: &NewPrecinctVote,
     ) -> Result<PrecinctVote, Error> {
-        let new_edit_trail = (
-            precinct_vote_edit_trails::dsl::user_id.eq(user_id),
-            precinct_vote_edit_trails::dsl::org.eq(&vote.org),
-            precinct_vote_edit_trails::dsl::candidate.eq(&vote.candidate),
-            precinct_vote_edit_trails::dsl::precinct.eq(&vote.precinct),
-            precinct_vote_edit_trails::dsl::alignment.eq(vote.alignment),
-            precinct_vote_edit_trails::dsl::human_votes.eq(vote.human_votes),
-        );
-        let edit_trail = diesel::insert_into(precinct_vote_edit_trails::table)
-            .values(&new_edit_trail)
-            .get_result::<PrecinctVoteEditTrail>(conn)
+        let edit_trail = PrecinctVote::create_edit_trail(conn, user_id, vote)
             .expect("Unable to append precinct vote edit trail");
 
         let updated_precinct_vote = (
@@ -68,6 +58,24 @@ impl PrecinctVote {
             .do_update()
             .set(updated_precinct_vote)
             .get_result::<PrecinctVote>(conn);
+    }
+
+    fn create_edit_trail(
+        conn: &PgConnection,
+        user_id: i32,
+        vote: &NewPrecinctVote,
+    ) -> Result<PrecinctVoteEditTrail, Error> {
+        let new_edit_trail = (
+            precinct_vote_edit_trails::dsl::user_id.eq(user_id),
+            precinct_vote_edit_trails::dsl::org.eq(&vote.org),
+            precinct_vote_edit_trails::dsl::candidate.eq(&vote.candidate),
+            precinct_vote_edit_trails::dsl::precinct.eq(&vote.precinct),
+            precinct_vote_edit_trails::dsl::alignment.eq(vote.alignment),
+            precinct_vote_edit_trails::dsl::human_votes.eq(vote.human_votes),
+        );
+        diesel::insert_into(precinct_vote_edit_trails::table)
+            .values(&new_edit_trail)
+            .get_result::<PrecinctVoteEditTrail>(conn)
     }
 
     pub fn get_votes(
