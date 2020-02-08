@@ -5,7 +5,7 @@ use diesel::ExpressionMethods;
 use diesel::QueryDsl;
 use diesel::RunQueryDsl;
 use forms::precinct_vote::NewPrecinctVote;
-use schema::precinct_edit_trails;
+use schema::precinct_vote_edit_trails;
 use schema::precinct_votes;
 
 #[derive(Queryable, Debug, Serialize, Deserialize)]
@@ -37,7 +37,7 @@ impl PrecinctVote {
     ) -> Result<PrecinctVote, Error> {
         // TODO: insert edit trail, get ID
         /*
-        diesel::insert_into(precinct_edit_trails::table)
+        diesel::insert_into(precinct_vote_edit_trails::table)
             .values(new_precinct_vote)
             .execute(conn)
         */

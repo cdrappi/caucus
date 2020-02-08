@@ -23,26 +23,46 @@ CREATE TABLE precincts (
     delegates INT DEFAULT 0 NOT NULL
 );
 
+CREATE TABLE precinct_turnout_edit_trails (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) NOT NULL,
+    org varchar(32) NOT NULL,
+    precinct varchar(32) NOT NULL,
+    turnout INT NOT NULL -- null before results are in
+);
+
+
+CREATE TABLE precinct_vote_edit_trails (
+    id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(id) NOT NULL,
+    org varchar(32) REFERENCES orgs(org) NOT NULL,
+    candidate varchar(32) REFERENCES candidates(candidate) NOT NULL,
+    precinct varchar(32) REFERENCES precincts(precinct) NOT NULL,
+    alignment INT NOT NULL,
+    human_votes INT NOT NULL
+);
+
 CREATE TABLE precinct_turnouts (
     id SERIAL PRIMARY KEY,
     -- where it came from
-    edit_trail_id references precinct_turnout_edit_trails(id) NOT NULL,
+    edit_trail_id INT REFERENCES precinct_turnout_edit_trails(id) NOT NULL,
     -- unique on
     org varchar(32) NOT NULL,
     precinct varchar(32) NOT NULL,
     -- the data
-    turnout INT, -- null before results are in
+    turnout INT NOT NULL, -- null before results are in
     UNIQUE(org, precinct)
 );
+
 
 CREATE TABLE precinct_votes (
     id SERIAL PRIMARY KEY,
     -- trace of where it came from
-    edit_trail_id references precinct_vote_edit_trails(id) NOT NULL,
+    edit_trail_id INT REFERENCES precinct_vote_edit_trails(id) NOT NULL,
     -- unique on
-    org varchar(32) references orgs(org) NOT NULL,
+    org varchar(32) REFERENCES orgs(org) NOT NULL,
     candidate varchar(32) REFERENCES candidates(candidate) NOT NULL,
-    precinct varchar(32) references precincts(precinct) NOT NULL,
+    precinct varchar(32) REFERENCES precincts(precinct) NOT NULL,
     -- actual data
     alignment INT NOT NULL,
     human_votes INT NOT NULL,
@@ -50,13 +70,3 @@ CREATE TABLE precinct_votes (
     UNIQUE(org, candidate, precinct) -- each org can overwrite each other
 );
 
-
-CREATE TABLE precinct_vote_edit_trails (
-    id SERIAL PRIMARY KEY,
-    user_id INT references users(id) NOT NULL,
-    org varchar(32) references orgs(org) NOT NULL,
-    candidate varchar(32) REFERENCES candidates(candidate) NOT NULL,
-    precinct varchar(32) references precincts(precinct) NOT NULL,
-    alignment INT NOT NULL,
-    human_votes INT NOT NULL,
-);
