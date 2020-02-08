@@ -8,7 +8,7 @@ use forms::precinct_vote::NewPrecinctVote;
 use schema::precinct_vote_edit_trails;
 use schema::precinct_votes;
 
-#[derive(Queryable, Debug, Serialize, Deserialize)]
+#[derive(Queryable, Debug, Serialize, Deserialize, AsChangeset)]
 pub struct PrecinctVote {
     pub id: i32,
     pub edit_trail_id: i32,
@@ -33,17 +33,32 @@ pub struct PrecinctVoteEditTrail {
 impl PrecinctVote {
     pub fn create_or_update(
         conn: &PgConnection,
-        new_precinct_vote: &NewPrecinctVote,
+        user_id: i32,
+        vote: &NewPrecinctVote,
     ) -> Result<PrecinctVote, Error> {
-        // TODO: insert edit trail, get ID
-        /*
-        diesel::insert_into(precinct_vote_edit_trails::table)
-            .values(new_precinct_vote)
-            .execute(conn)
-        */
+        let new_edit_trail = (
+            precinct_vote_edit_trails::dsl::user_id.eq(user_id),
+            precinct_vote_edit_trails::dsl::org.eq(&vote.org),
+            precinct_vote_edit_trails::dsl::candidate.eq(&vote.candidate),
+            precinct_vote_edit_trails::dsl::precinct.eq(&vote.precinct),
+            precinct_vote_edit_trails::dsl::alignment.eq(vote.alignment),
+            precinct_vote_edit_trails::dsl::human_votes.eq(vote.human_votes),
+        );
+        let edit_trail = diesel::insert_into(precinct_vote_edit_trails::table)
+            .values(&new_edit_trail)
+            .get_result::<PrecinctVoteEditTrail>(conn)
+            .expect("Unable to append precinct vote edit trail");
 
-        diesel::insert_into(precinct_votes::table)
-            .values(new_precinct_vote)
+        let updated_precinct_vote = (
+            precinct_votes::dsl::edit_trail_id.eq(edit_trail.id),
+            precinct_votes::dsl::org.eq(&vote.org),
+            precinct_votes::dsl::candidate.eq(&vote.candidate),
+            precinct_votes::dsl::precinct.eq(&vote.precinct),
+            precinct_votes::dsl::alignment.eq(vote.alignment),
+            precinct_votes::dsl::human_votes.eq(vote.human_votes),
+        );
+        return diesel::insert_into(precinct_votes::table)
+            .values(&updated_precinct_vote)
             .on_conflict((
                 precinct_votes::org,
                 precinct_votes::candidate,
@@ -51,8 +66,8 @@ impl PrecinctVote {
                 precinct_votes::alignment,
             ))
             .do_update()
-            .set(new_precinct_vote)
-            .get_result(conn)
+            .set(updated_precinct_vote)
+            .get_result::<PrecinctVote>(conn);
     }
 
     pub fn get_votes(

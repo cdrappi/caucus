@@ -88,20 +88,30 @@ fn update_precinct_turnout(
         turnout
     );
     match User::can_edit_votes(&conn, user_id, &org, &precinct) {
-        true => {
-            // TODO: apply edits
-            match PrecinctTurnout::set_turnout(&conn, &precinct, turnout) {
-                Ok(_) => JsonResponse::ok(json!({ "success": true })),
-                Err(e) => JsonResponse::err500(
-                    json!({ "success": false, "error": format!("{:?}", e) }),
-                ),
-            }
-        }
+        true => edit_votes(&conn, user_id, &org, &precinct, turnout),
         false => JsonResponse::err400(json!({
             "success": false,
             "error": "Not authorized to edit this precinct"
         })),
     }
+}
+
+fn edit_votes(
+    conn: &DbConn,
+    user_id: i32,
+    org: &String,
+    precinct: &String,
+    turnout: i32,
+) -> JsonResponse {
+    // TODO: apply edits
+    return match PrecinctTurnout::set_turnout(
+        conn, user_id, org, precinct, turnout,
+    ) {
+        Ok(_) => JsonResponse::ok(json!({ "success": true })),
+        Err(e) => JsonResponse::err500(
+            json!({ "success": false, "error": format!("{:?}", e) }),
+        ),
+    };
 }
 
 /// Update precinct if user is precinct captain or admin
@@ -127,7 +137,7 @@ fn update_precinct_votes(
     match User::can_edit_votes(&conn, user_id, &org, &precinct) {
         true => {
             // TODO: apply edits
-            match PrecinctVote::create_or_update(&conn, &body) {
+            match PrecinctVote::create_or_update(&conn, user_id, &body) {
                 Ok(_) => JsonResponse::ok(json!({ "success": true })),
                 Err(e) => JsonResponse::err500(
                     json!({ "success": false, "error": format!("{:?}", e) }),
