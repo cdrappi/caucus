@@ -34,7 +34,7 @@ impl PrecinctTurnout {
         precinct: &String,
         turnout: i32,
     ) -> Result<PrecinctTurnout, Error> {
-        let edit_trail = PrecinctTurnout::create_edit_trail(
+        let edit_trail = PrecinctTurnoutEditTrail::create(
             conn, user_id, org, precinct, turnout,
         )
         .expect("Unable to append precinct turnout edit trail");
@@ -52,8 +52,10 @@ impl PrecinctTurnout {
             .set(updated_precinct_turnout)
             .get_result::<PrecinctTurnout>(conn);
     }
+}
 
-    fn create_edit_trail(
+impl PrecinctTurnoutEditTrail {
+    fn create(
         conn: &PgConnection,
         user_id: i32,
         org: &String,
