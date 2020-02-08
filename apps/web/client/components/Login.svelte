@@ -10,8 +10,10 @@
   let password = "";
   let message = "Login to the caucus app";
 
+  $: console.log(password);
+
   function onClick() {
-    validation = validateLoginInputs(username, password);
+    let validation = validateLoginInputs(username, password);
     if (validation.valid) {
       fetchLogin(username, password)
         .then(res => res.json())

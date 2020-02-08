@@ -14,6 +14,7 @@ extern crate chrono;
 extern crate jsonwebtoken;
 extern crate log;
 extern crate reqwest;
+extern crate rocket_cors;
 extern crate rustc_serialize;
 
 mod auth;
@@ -23,13 +24,33 @@ mod models;
 mod routes;
 mod schema;
 mod util;
+use rocket::http::Method;
 
 use db::DbConn;
+use rocket_cors::{AllowedHeaders, AllowedOrigins, Error};
 use routes::get_routes;
 
-fn main() {
+fn main() -> Result<(), Error> {
+    let allowed_origins =
+        AllowedOrigins::some_exact(&["http://127.0.0.1:8000"]);
+    // You can also deserialize this
+    let cors = rocket_cors::CorsOptions {
+        allowed_origins,
+        allowed_methods: vec![Method::Get]
+            .into_iter()
+            .map(From::from)
+            .collect(),
+        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
+        allow_credentials: true,
+        ..Default::default()
+    }
+    .to_cors()?;
+
     rocket::ignite()
+        .attach(cors)
         .attach(DbConn::fairing())
         .mount("/", get_routes())
         .launch();
+
+    Ok(())
 }

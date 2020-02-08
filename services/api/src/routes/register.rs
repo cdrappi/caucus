@@ -12,7 +12,7 @@ pub fn get_routes() -> Vec<Route> {
 }
 
 /// Create a account with email and password (No confirmation)
-#[post("/register/username", format = "application/json", data = "<body>")]
+#[post("/ums/register", format = "application/json", data = "<body>")]
 fn register_with_username(
     conn: DbConn,
     body: Json<RegisterUsername>,

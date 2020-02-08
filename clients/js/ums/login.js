@@ -1,14 +1,14 @@
 import { API_HOST, postAuthJson } from "../util";
 
-function validateLoginInputs(loginType, login, password) {
+function validateLoginInputs(login, password) {
     if (login && password) {
         return { valid: true };
     } else {
         let message = "";
         if (!login && !password) {
-            message = `${loginType} and password cannot be blank`;
+            message = "username and password cannot be blank";
         } else if (!login) {
-            message = `${loginType} cannot be blank`;
+            message = "username cannot be blank";
         } else if (!password) {
             message = "Password cannot be blank";
         }

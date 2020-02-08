@@ -9,7 +9,7 @@
   let message = "Register with any username but make a strong password";
 
   function onClick() {
-    validation = validateLoginInputs(username, password);
+    let validation = validateLoginInputs(username, password);
     if (validation.valid) {
       fetchRegister(username, password)
         .then(res => res.json())
