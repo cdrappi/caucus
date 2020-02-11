@@ -12,18 +12,19 @@
     if (token === null) {
       return false;
     }
-    return fetchWhoseJson(token)
+    let isLoggedInValue = false;
+    let isValidToken = fetchWhoseJson(token)
       .then(res => res.json())
       .then(json => {
         if (json.success) {
-          return true;
-        } else {
-          return false;
+          isLoggedInValue = true;
         }
       })
       .catch(reason => {
-        return false;
+        console.log(`Failed to see if user is logged in: ${reason}`);
       });
+
+    return isLoggedInValue;
   }
 </script>
 
