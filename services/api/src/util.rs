@@ -9,6 +9,10 @@ pub fn expect_env(name: &str) -> String {
     return env::var(name).expect(&format!("Missing `{}` env variable", name));
 }
 
+pub fn expect_env_u16(name: &str) -> u16 {
+    return expect_env(name).parse().unwrap();
+}
+
 pub fn now_seconds() -> u64 {
     SystemTime::now()
         .duration_since(SystemTime::UNIX_EPOCH)
