@@ -12,7 +12,7 @@
     if (token === null) {
       return false;
     }
-    fetchWhoseJson(token)
+    return fetchWhoseJson(token)
       .then(res => res.json())
       .then(json => {
         if (json.success) {
