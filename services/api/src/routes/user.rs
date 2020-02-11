@@ -14,7 +14,7 @@ pub fn get_routes() -> Vec<Route> {
 fn whose_token_json(jwt: JsonWebToken) -> JsonResponse {
     let user_id = User::get_id_from_token(&jwt);
     log::info!("User {} pinged the server via json", user_id);
-    JsonResponse::ok(json!({ "user_id": user_id }))
+    JsonResponse::ok(json!({ "user_id": user_id, "success": true }))
 }
 
 /// Decode JsonWebToken and return user's ID as JSON

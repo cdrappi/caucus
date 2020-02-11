@@ -15,6 +15,7 @@ table! {
     counties (county) {
         county -> Varchar,
         state_code -> Varchar,
+        delegates -> Int4,
     }
 }
 
@@ -38,6 +39,14 @@ table! {
         user_id -> Int4,
         org -> Varchar,
         precinct -> Varchar,
+    }
+}
+
+table! {
+    precincts (precinct) {
+        precinct -> Varchar,
+        county -> Varchar,
+        delegates -> Int4,
     }
 }
 
@@ -86,14 +95,6 @@ table! {
 }
 
 table! {
-    precincts (precinct) {
-        precinct -> Varchar,
-        county -> Varchar,
-        delegates -> Int4,
-    }
-}
-
-table! {
     users (id) {
         id -> Int4,
         is_admin -> Bool,
@@ -129,10 +130,10 @@ allow_tables_to_appear_in_same_query!(
     org_admins,
     orgs,
     precinct_admins,
+    precincts,
     precinct_turnout_edit_trails,
     precinct_turnouts,
     precinct_vote_edit_trails,
     precinct_votes,
-    precincts,
     users,
 );

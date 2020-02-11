@@ -5,17 +5,22 @@
 
   import { fetchWhoseJson } from "../../../clients/js/ums/user";
 
-  let isLoggedIn = getIsLoggedIn();
+  let isLoggedIn = false;
+  isLoggedIn = getIsLoggedIn().then(result => {
+    isLoggedIn = result;
+  });
 
-  function getIsLoggedIn() {
+  async function getIsLoggedIn() {
     let token = getToken();
+    console.log(`${token}`);
     if (token === null) {
       return false;
     }
     let isLoggedInValue = false;
-    let isValidToken = fetchWhoseJson(token)
+    let isValidToken = await fetchWhoseJson(token)
       .then(res => res.json())
       .then(json => {
+        console.log(`${JSON.stringify(json)}`);
         if (json.success) {
           isLoggedInValue = true;
         }

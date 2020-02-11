@@ -1,4 +1,5 @@
 export PROJECT_ALIAS="caucus"
+export PYTHONPATH="${CAUCUS_PATH}/clients/python";
 
 source ${CAUCUS_PATH}/clients/python/venv/bin/activate;
 
@@ -13,3 +14,5 @@ alias sb="cdb; cargo run";
 alias sbr="sb --release";
 alias fed="cdb; source flush_env.sh dev";
 alias fes="cdb; source flush_env.sh staging";
+
+alias rdb="cdp; python db/drop_tables.py; cdb; diesel migration run; cdp; python db/seed_db.py; caucus";
