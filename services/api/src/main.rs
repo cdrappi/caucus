@@ -16,6 +16,8 @@ extern crate log;
 extern crate reqwest;
 extern crate rocket_cors;
 extern crate rustc_serialize;
+use rocket::config::{Config, Environment};
+use util::{expect_env, expect_env_u16};
 
 mod auth;
 mod db;
@@ -29,6 +31,7 @@ use rocket::http::Method;
 use db::DbConn;
 use rocket_cors::{AllowedHeaders, AllowedOrigins, Error};
 use routes::get_routes;
+use std::collections::HashMap;
 
 fn main() -> Result<(), Error> {
     let allowed_origins =
@@ -51,7 +54,20 @@ fn main() -> Result<(), Error> {
     }
     .to_cors()?;
 
-    rocket::ignite()
+    let mut database_config = HashMap::new();
+    database_config.insert("url", expect_env("DATABASE_URL"));
+    let mut databases = HashMap::new();
+    databases.insert("postgres_database", database_config);
+    let config = Config::build(Environment::Development)
+        .address(expect_env("ROCKET_ADDRESS"))
+        // use Heroku's dynamically assigned port
+        .port(expect_env_u16("PORT"))
+        .workers(5)
+        .extra("databases", databases)
+        .finalize()
+        .unwrap();
+
+    rocket::custom(config)
         .attach(cors)
         .attach(DbConn::fairing())
         .mount("/", get_routes())
