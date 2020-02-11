@@ -1,6 +1,6 @@
 use auth::jwt::{decode_jwt, JsonWebToken};
 use bcrypt::{hash, verify, DEFAULT_COST};
-use chrono::NaiveDateTime;
+use chrono::{NaiveDateTime, Utc};
 use diesel::prelude::PgConnection;
 use diesel::query_dsl::filter_dsl::FilterDsl;
 use diesel::result::Error;
@@ -70,10 +70,13 @@ impl User {
         username: &String,
         password: &String,
     ) -> Result<usize, Error> {
+        let now = Utc::now().naive_utc();
         let new_user = (
             users::dsl::is_admin.eq(false),
             users::dsl::username.eq(username),
             users::dsl::password_hash.eq(User::hash_password(password)),
+            users::dsl::created_at.eq(now),
+            users::dsl::last_login.eq(now),
         );
         return diesel::insert_into(users::table)
             .values(&new_user)

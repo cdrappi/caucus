@@ -11,8 +11,8 @@ pub fn get_routes() -> Vec<Route> {
     routes![register_with_username,]
 }
 
-/// Create a account with email and password (No confirmation)
-#[post("/register/username", format = "application/json", data = "<body>")]
+/// Create a account with username and password (No confirmation)
+#[post("/ums/register", format = "application/json", data = "<body>")]
 fn register_with_username(
     conn: DbConn,
     body: Json<RegisterUsername>,
@@ -47,7 +47,7 @@ fn register_with_username(
                 }
                 Err(r) => {
                     log::error!(
-                        "Error creating a user with email {}",
+                        "Error creating a user with username {}",
                         &body.username
                     );
                     JsonResponse::err500(json!({

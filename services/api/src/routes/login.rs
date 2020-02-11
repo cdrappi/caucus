@@ -14,7 +14,7 @@ pub fn get_routes() -> Vec<Route> {
 }
 
 /// Login with usernane and password
-#[post("/login/username", format = "application/json", data = "<body>")]
+#[post("/ums/login", format = "application/json", data = "<body>")]
 fn login_with_username(
     conn: DbConn,
     body: Json<UsernameLogin>,
