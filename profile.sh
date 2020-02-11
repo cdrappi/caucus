@@ -15,8 +15,8 @@ alias sbr="sb --release";
 
 alias flush_env_backend="cdb; source flush_env.sh";
 
-alias fed="flush_env_backend dev; flush_env_mobile dev";
-alias fes="flush_env_backend staging; flush_env_mobile staging";
+alias fed="flush_env_backend dev";
+alias fes="flush_env_backend staging";
 
 alias dbh="bbr; bash deploy.sh";
 
