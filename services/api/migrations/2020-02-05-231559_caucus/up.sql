@@ -14,7 +14,7 @@ CREATE TABLE caucus (
 CREATE TABLE counties (
     county varchar(32) PRIMARY KEY,
     state_code varchar(2) REFERENCES caucus(state_code) NOT NULL,
-    delegates INT NOT NUll
+    delegates INT NOT NULL
     -- nullables:
 );
 
