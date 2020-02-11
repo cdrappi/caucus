@@ -1,4 +1,11 @@
-const API_HOST = process.env.API_HOST || "http://127.0.0.1:8000";
+const node_env = process.env.NODE_ENV;
+const api_hosts = {
+    staging: "",
+    production: "",
+    development: "http://127.0.0.1:8000"
+}
+const API_HOST = api_hosts[node_env];
+
 
 function postAuthJson(url, obj) {
     return fetch(url, {

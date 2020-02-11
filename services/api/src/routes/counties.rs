@@ -7,12 +7,12 @@ use rocket::Route;
 use util::JsonResponse;
 
 pub fn get_routes() -> Vec<Route> {
-    routes![get_county_precincts,]
+    routes![get_state_counties,]
 }
 
 /// Decode JsonWebToken and return user's ID as JSON
 #[get("/caucus/states/<state_code>/counties", format = "application/json")]
-fn get_county_precincts(
+fn get_state_counties(
     jwt: JsonWebToken,
     conn: DbConn,
     state_code: String,
