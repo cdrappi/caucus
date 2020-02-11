@@ -4,8 +4,8 @@
 FROM rustlang/rust:nightly as build
 
 # create a new empty shell project
-RUN USER=root cargo new --bin voters
-WORKDIR /voters
+RUN USER=root cargo new --bin caucus
+WORKDIR /caucus
 
 # copy over your manifests
 COPY ./Cargo.lock ./Cargo.lock
@@ -19,19 +19,18 @@ RUN rm src/*.rs
 COPY ./src ./src
 
 # build for release
-RUN rm ./target/release/deps/voters*
+RUN rm ./target/release/deps/caucus*
 RUN cargo build --release
 
 # our final base
 FROM rustlang/rust:nightly
 
 # copy the build artifact from the build stage
-COPY --from=build /voters/target/release/voters .
+COPY --from=build /caucus/target/release/caucus .
 
-# Finally copy over templates
-COPY ./templates ./templates
-
-EXPOSE 8000
+# Heroku does not respect EXPOSE
+# https://devcenter.heroku.com/articles/container-registry-and-runtime
+# EXPOSE 8000
 
 # set the startup command to run your binary
-CMD ["./voters"]
+CMD ["./caucus"]
