@@ -10,6 +10,7 @@ use schema::counties;
 pub struct County {
     pub county: String,
     pub state_code: String,
+    pub delegates: i32,
 }
 
 impl County {

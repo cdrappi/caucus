@@ -40,7 +40,12 @@ fn main() -> Result<(), Error> {
             .into_iter()
             .map(From::from)
             .collect(),
-        allowed_headers: AllowedHeaders::All,
+        allowed_headers: AllowedHeaders::some(&[
+            "Authorization",
+            "Accept",
+            "Access-Control-Allow-Origin",
+            "Content-Type",
+        ]),
         allow_credentials: true,
         ..Default::default()
     }

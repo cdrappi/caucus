@@ -13,14 +13,15 @@ CREATE TABLE caucus (
 
 CREATE TABLE counties (
     county varchar(32) PRIMARY KEY,
-    state_code varchar(2) REFERENCES caucus(state_code) NOT NULL
+    state_code varchar(2) REFERENCES caucus(state_code) NOT NULL,
+    delegates INT NOT NULL
     -- nullables:
 );
 
 CREATE TABLE precincts (
     precinct varchar(32) PRIMARY KEY,
     county varchar(32) REFERENCES counties(county) NOT NULL,
-    delegates INT DEFAULT 0 NOT NULL
+    delegates INT NOT NULL
 );
 
 CREATE TABLE precinct_turnout_edit_trails (

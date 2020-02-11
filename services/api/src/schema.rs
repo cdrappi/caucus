@@ -15,6 +15,7 @@ table! {
     counties (county) {
         county -> Varchar,
         state_code -> Varchar,
+        delegates -> Int4,
     }
 }
 

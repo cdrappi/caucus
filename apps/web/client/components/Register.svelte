@@ -15,7 +15,7 @@
         .then(res => res.json())
         .then(json => {
           if (json.success) {
-            setToken(json.token);
+            setToken(json.jwt);
             isLoggedIn = true;
           } else {
             message = json.error;
